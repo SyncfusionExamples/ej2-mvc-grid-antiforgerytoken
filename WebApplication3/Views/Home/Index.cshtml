@@ -1,0 +1,70 @@
+﻿@using Syncfusion.EJ2
+
+<div>
+    <div>
+        <div id="dialog"></div>
+        @*<div>
+            @Html.EJS().Dialog("default_dialog").Header("dialog").Render();
+        </div>*@
+        @Html.EJS().Button("change-text").Content("Change Header Text").IsPrimary(true).Render()
+        @Html.AntiForgeryToken()
+        @Html.EJS().Grid("Grid").DataSource(dm => dm.Url("Home/DataSource").InsertUrl("Home/Insert").UpdateUrl("Home/Update").RemoveUrl("Home/Delete").Adaptor("UrlAdaptor")).Load("load").ActionComplete("actioncomplete").Columns(col =>
+                        {
+
+                            col.Field("OrderID").HeaderText("Order ID").IsPrimaryKey(true).Width("120").ValidationRules(new { required = true }).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+                          //col.Field("CustomerID").HeaderText("Customer ID").Width("150").EditType("dropdownedit").Add();
+                            col.Field("EmployeeID").HeaderText("Employee ID").Width("150").Add();
+                            //col.Field("Freight").HeaderText("Freight").Width("120").EditType("numericedit").ValidationRules(new { required = true }).Format("C2").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+                            //col.Field("ShipCity").HeaderText("Ship Country").Width("150").EditType("dropdownedit").Add();
+
+                        }).AllowPaging().EditSettings(edit => { edit.AllowAdding(true).AllowEditing(true).AllowDeleting(true).Mode(Syncfusion.EJ2.Grids.EditMode.Normal); }).Toolbar(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" }).Render()
+    </div>
+
+</div>
+
+
+<script>
+    
+    window.customAdaptor = new ej.data.UrlAdaptor();
+    customAdaptor = ej.base.extend(customAdaptor, {
+
+          processResponse: function (data, ds, query, xhr, request, changes) {
+              request.data = JSON.stringify(data);
+              return ej.data.UrlAdaptor.prototype.processResponse.call(this,data, ds, query, xhr, request, changes)
+        },
+        insert: function (dm, data, tableName) {
+            return {
+                url: dm.dataSource.insertUrl || dm.dataSource.crudUrl || dm.dataSource.url,
+                data: $.param({
+                    __RequestVerificationToken: document.getElementsByName("__RequestVerificationToken")[0].value,
+                    value: data,
+                    table: tableName,
+                    action: 'insert'
+                }),
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        },
+        update: function (dm, keyField, value, tableName) {
+            return {
+               // type: "POST",
+                url: dm.dataSource.updateUrl || dm.dataSource.crudUrl || dm.dataSource.url,
+                data: $.param({
+                    __RequestVerificationToken: document.getElementsByName("__RequestVerificationToken")[0].value,
+                    value: value,
+                    table: tableName,
+                    action: 'insert'
+                }),
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+            };
+        },
+    }); 
+ 
+    function load(args) {
+        this.dataSource.adaptor = customAdaptor;
+    }
+    function actioncomplete(args) {
+        if (args.requestType == 'save' || args.requestType == 'delete') {
+            this.refresh();
+        }
+
+    }</script>
