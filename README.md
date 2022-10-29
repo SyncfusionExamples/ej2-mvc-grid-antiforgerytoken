@@ -1,5 +1,7 @@
 # Performing CRUD operation with AntiForgeryToken
 
+This sample explains about how to perform the CRUD operation with AntiForgeryToken in ASP.NET MVC DataGrid.
+
 Anti-forgery token is used between the client and server to prevent cross-site request forgery (CSRF) attack. For more information on preventing CSRF attack, please refer to the
 [link]( https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery?view=aspnetcore-2.1#authentication-fundamentals).
 
@@ -42,3 +44,14 @@ window.customAdaptor = new ej.data.UrlAdaptor();
     });
 
 ```
+
+## Prerequisites
+
+* Visual Studio 2022
+
+## How to run the project
+
+* Checkout this project to a location in your disk.
+* Open the solution file using the Visual Studio 2022.
+* Restore the NuGet packages by rebuilding the solution.
+* Run the project.
